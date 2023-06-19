@@ -14,7 +14,7 @@ typedef std::pair<Point, Point> Move;
 class Board{
   public:
     char board[2][BOARD_H][BOARD_W] = {{
-      //white
+      //white 
       {0, 0, 0, 0, 0},
       {0, 0, 0, 0, 0},
       {0, 0, 0, 0, 0},

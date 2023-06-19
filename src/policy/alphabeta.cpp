@@ -2,7 +2,7 @@
 // #include <iostream>
 #include "../state/state.hpp"
 #include "./alphabeta.hpp"
-#define infinity 2147483640
+#define infinity 20000005
 
 /**
  * @brief Randomly get a legal action
@@ -14,7 +14,8 @@
 Move AlphaBeta::get_move(State *state, int depth){
     // legal_actions is a vector of Move
     int heuristic = -20000000;
-    Move move ={{0,0} , {0,0}};
+    int counter = 0 , index = 0;
+    // Move move ={{0,0} , {0,0}};
 
     if(!state->legal_actions.size())
         state->get_legal_actions();
@@ -23,10 +24,12 @@ Move AlphaBeta::get_move(State *state, int depth){
         int tmp = get_alphabeta_value(state->next_state(i), depth-1, false, -infinity, infinity);
         if (tmp > heuristic) {
             heuristic = tmp;
-            move = i;
+            //move = i;
+            index = counter;
         }
+        counter++;
     }
-    return move;
+    return state->legal_actions[index];
 }
 int AlphaBeta::get_alphabeta_value(State *state, int depth, bool maxingPlayer, int alpha, int beta) {
     if(!state->legal_actions.size())
@@ -35,7 +38,7 @@ int AlphaBeta::get_alphabeta_value(State *state, int depth, bool maxingPlayer, i
     if (state->game_state == WIN && maxingPlayer) return infinity+2;
     else if (state->game_state == WIN && !maxingPlayer) return -infinity-2;
 
-    if (depth == 0 || !state->legal_actions.size()) {
+    if (depth == 0 ) {
         return state->evaluate(maxingPlayer);
     }
     if (maxingPlayer) {
