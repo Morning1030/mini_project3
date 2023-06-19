@@ -5,7 +5,7 @@
 #include "./state.hpp"
 #include "../config.hpp"
 
-
+int piece_value[6] = {1,5,3,3,9,100};
 /**
  * @brief evaluate the state
  * 
@@ -23,6 +23,8 @@ int State::evaluate(bool maxingPlayer){
   auto oppn_board = this->board.board[1-me];
   // auto self_board = this->board.board[this->player];
   // auto oppn_board = this->board.board[1-this->player];
+
+  
   Point my_king, oppn_king;
   Point my_queen(10,10);
   int upgrade_point = 0;
@@ -31,12 +33,18 @@ int State::evaluate(bool maxingPlayer){
 
   for (int i = 0; i < BOARD_H; i++) {
     for (int j = 0; j < BOARD_W; j++) {
+      /*
         if (oppn_board[i][j] != '0' && oppn_board[i][j] != '6') oppn_piece.push_back(Point(i,j));
-        if (self_board[i][j] == '6') my_king = Point(i, j);
-        if (oppn_board[i][j] == '6') oppn_king = Point(i, j);
-        if (self_board[i][j] == '5') my_queen = Point(i, j);
-        if (self_board[i][j] > '0') weight += 2*(self_board[i][j] - '0');
-        if (oppn_board[i][j] > '0') weight -= 2*(oppn_board[i][j] - '0');
+        if (self_board[i][j] == '6') weight += 300;
+        if (oppn_board[i][j] == '6') weight -= 300;
+        if (self_board[i][j] == '5') weight += 10;
+        if (self_board[i][j] == '5') weight -= 10;
+      */
+        //if (self_board[i][j] > '0') weight += 2*(self_board[i][j] - '0');
+        //if (oppn_board[i][j] > '0') weight -= 2*(oppn_board[i][j] - '0');
+
+        if (self_board[i][j] > '0') weight += piece_value[self_board[i][j] - '0'];
+        if (oppn_board[i][j] > '0') weight -= piece_value[oppn_board[i][j] - '0'];
 
         /*
         if (self_board[i][j] == '1') {
@@ -69,7 +77,8 @@ int State::evaluate(bool maxingPlayer){
       distance += (4 - abs(my_queen.second - oppn_king.second));
   }
   */
-  return upgrade_point + distance + weight;
+  //return upgrade_point + distance + weight;
+  return weight;
 }
 /**
  * @brief return next state after the move
