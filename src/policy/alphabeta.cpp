@@ -14,8 +14,7 @@
 Move AlphaBeta::get_move(State *state, int depth){
     // legal_actions is a vector of Move
     int heuristic = -20000000;
-    int counter = 0 , index = 0;
-    // Move move ={{0,0} , {0,0}};
+    Move move ={{0,0} , {0,0}};
 
     if(!state->legal_actions.size())
         state->get_legal_actions();
@@ -24,21 +23,19 @@ Move AlphaBeta::get_move(State *state, int depth){
         int tmp = get_alphabeta_value(state->next_state(i), depth-1, false, -infinity, infinity);
         if (tmp > heuristic) {
             heuristic = tmp;
-            //move = i;
-            index = counter;
+            move = i;
         }
-        counter++;
     }
-    return state->legal_actions[index];
+    return move;
 }
 int AlphaBeta::get_alphabeta_value(State *state, int depth, bool maxingPlayer, int alpha, int beta) {
     if(!state->legal_actions.size())
         state->get_legal_actions();
 
-    if (state->game_state == WIN && maxingPlayer) return infinity+2;
-    else if (state->game_state == WIN && !maxingPlayer) return -infinity-2;
+     if (state->game_state == WIN && maxingPlayer) return infinity+2;
+     else if (state->game_state == WIN && !maxingPlayer) return -infinity-2;
 
-    if (depth == 0 ) {
+    if (depth == 0 || state->game_state == WIN) {
         return state->evaluate(maxingPlayer);
     }
     if (maxingPlayer) {

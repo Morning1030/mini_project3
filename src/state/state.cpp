@@ -21,13 +21,10 @@ int State::evaluate(bool maxingPlayer){
   else me = 1-this->player;
   auto self_board = this->board.board[me];
   auto oppn_board = this->board.board[1-me];
-  // auto self_board = this->board.board[this->player];
-  // auto oppn_board = this->board.board[1-this->player];
 
-  
   Point my_king, oppn_king;
   Point my_queen(10,10);
-  //int upgrade_point = 0;
+  int upgrade_point = 0;
   int weight = 0;
   std::vector<Point> oppn_piece;
   int attack = 0;
@@ -42,32 +39,29 @@ int State::evaluate(bool maxingPlayer){
           weight -= 500;
           oppn_king = Point(i, j);
         }
-        if (self_board[i][j] == 5) weight += 20;
+        if (self_board[i][j] == 5) {
+          weight += 20;
+          my_queen = Point(i, j);
+        }
         if (oppn_board[i][j] == 5) weight -= 20;
         if (self_board[i][j] == 2) weight += 8;
         if (oppn_board[i][j] == 2) weight -= 8;
-        if (self_board[i][j] >  0) weight += 3*(self_board[i][j]);
+        if (self_board[i][j] > 0) weight += 3*(self_board[i][j]);
         if (oppn_board[i][j] > 0) weight -= 3*(oppn_board[i][j]);
-
-        //if (self_board[i][j] > '0') weight += piece_value[self_board[i][j] - '0'];
-        //if (oppn_board[i][j] > '0') weight -= piece_value[oppn_board[i][j] - '0'];
-
         /*
-        if (self_board[i][j] == '1') {
-            if (maxingPlayer) upgrade_point += (i-1)/2;
-            else upgrade_point += (4-i)/2;
-            weight += 2;
+        if (self_board[i][j] == 1) {
+            if (this->player) upgrade_point += (i-1);
+            else upgrade_point += (4-i);
         }
-        if (oppn_board[i][j] == '1') {
-            if (1-maxingPlayer) upgrade_point -= (i-1)/2;
-            else upgrade_point -= (4-i)/2;
-            weight -= 2;
+        if (oppn_board[i][j] == 1) {
+            if (1-this->player) upgrade_point -= (i-1);
+            else upgrade_point -= (4-i);
         }
         */
     }
   }
   /*
-   for (int j = 0; j < BOARD_W; j++) {
+  for (int j = 0; j < BOARD_W; j++) {
     if (self_board[my_king.first][j]) break;
     if (oppn_board[my_king.first][j] == '5' || oppn_board[my_king.first][j] == '2') attack -= 10;
   }
@@ -75,11 +69,11 @@ int State::evaluate(bool maxingPlayer){
     if (self_board[i][my_king.second]) break;
     if (oppn_board[i][my_king.second] == '5' || oppn_board[i][my_king.second] == '2') attack -= 10; 
   }
-  distance between my king and oppn's piece
-  int distance = 0;
   if (my_queen.first == oppn_king.first) attack += 10;
   if (my_queen.second == oppn_king.second) attack += 10;
   */
+  // distance between my king and oppn's piece
+  // int distance = 0;
   /*
   std::vector<Point>::iterator it;
   for (it = oppn_piece.begin(); it != oppn_piece.end(); it++) {
@@ -90,7 +84,7 @@ int State::evaluate(bool maxingPlayer){
   // distance between my queen and oppn's king
   //return upgrade_point + distance + weight;
   //std::cout << weight << std::endl;
-  return weight;
+  return weight + attack + upgrade_point;
 }
 /**
  * @brief return next state after the move
